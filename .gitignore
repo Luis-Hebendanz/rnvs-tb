@@ -1,0 +1,7 @@
+.idea/*
+rnvs_tb/__pycache__/*
+rnvs_tb/blocks/__pycache__/*
+*.tar.gz
+/rnvs_tb.egg-info/
+build/
+dist/

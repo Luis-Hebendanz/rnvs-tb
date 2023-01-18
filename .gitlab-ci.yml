@@ -1,0 +1,43 @@
+
+stages:
+  - build
+  - deploy
+
+bdist:
+  image: python:3.7
+  stage: build
+  script:
+    - python3 -m pip install --user --upgrade setuptools wheel
+    - python3 setup.py sdist bdist_wheel
+  artifacts:
+    paths:
+      - dist/
+
+deploy_svn:
+  image: alpine:latest
+  stage: deploy
+  only:
+    - tags
+  script:
+    - apk add git git-svn gawk
+    - mkdir svnfoo
+    - cd svnfoo
+    - mkdir -p ~/.subversion/auth/svn.simple
+    - printf "K 8\npasstype\nV 6\nsimple\nK 8\npassword\nV ${#SVN_PASS}\n$SVN_PASS\nK 15\nsvn:realmstring\nV ${#SVN_REALM}\n$SVN_REALM\nK 8\nusername\nV ${#SVN_USER}\n$SVN_USER\nEND" > ~/.subversion/auth/svn.simple/$(printf "$SVN_REALM" | md5sum | awk '{print $1}')
+    - git svn init $SVN_PATH
+    - git svn fetch
+    - mkdir -p repo/rnvs-tb
+    - cp ../dist/*.whl repo/rnvs-tb/
+    - cd repo
+    - printf '<!DOCTYPE html>\n<html>\n<body>\n' > index.html
+    - ls -d */ | awk '{print "<a href=\"" $1 "\">" substr($1, 1, length($1)-1) "</a>"}' >> index.html
+    - printf '\n</body>\n</html>' >> index.html
+    - cd rnvs-tb
+    - printf '<!DOCTYPE html>\n<html>\n<body>\n' > index.html
+    - ls -1 | awk '!/index.html/ {print "<a href=\"" $1 "\">" $1 "</a>"}' >> index.html
+    - printf '\n</body>\n</html>' >> index.html
+    - cd ../..
+    - git config user.email "$SVN_USER@ccs-labs.org"
+    - git config user.name "$SVN_USER"
+    - 'git add * && git commit -m "Gitlab CI/CD"'
+    - git svn dcommit
