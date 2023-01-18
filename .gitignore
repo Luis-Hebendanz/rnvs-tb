@@ -1,4 +1,5 @@
 .idea/*
+result
 rnvs_tb/__pycache__/*
 rnvs_tb/blocks/__pycache__/*
 *.tar.gz

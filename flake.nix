@@ -21,12 +21,8 @@
             src = self;
 
             doCheck = false;
-            checkInputs = with spkgs; [ pypkgs.pytest gcc coreutils ];
             propagatedBuildInputs = with pypkgs; [ setuptools docker ];
 
-            checkPhase = ''
-              pytest
-            '';
           };
       });
 
@@ -40,7 +36,7 @@
           in
           pkgs.${system}.mkShellNoCC {
           packages = with spkgs; [
-            pypkgs.pytest gcc coreutils
+
           ];
         };
       });
