@@ -21,8 +21,8 @@
             src = self;
 
             doCheck = false;
-            propagatedBuildInputs = with pypkgs; [ setuptools docker ];
-
+            propagatedBuildInputs = [ spkgs.lsof pypkgs.docker ];
+            buildInputs =  with pypkgs; [ setuptools ];
           };
       });
 
