@@ -1,7 +1,8 @@
 import setuptools
+import os.path as osp
 
 version = {}
-with open("rnvs_tb/version.py") as fp:
+with open(osp.join(osp.dirname(__file__), "rnvs_tb/version.py")) as fp:
     exec(fp.read(), version)
 
 setuptools.setup(
@@ -18,7 +19,7 @@ setuptools.setup(
     package_data={'rnvs_tb': ['Dockerfile_buildenv']},
     entry_points={
         'console_scripts': [
-            'rnvs-tb-dht = rnvs_tb.blocks.block5:main',
+            'rnvs-tb-dht = rnvs_tb.blocks.block6:main',
         ]
     }
 )
