@@ -18,8 +18,12 @@ import shutil
 from docker.models.containers import Container
 from docker.errors import ImageNotFound
 
-from .node import NamespaceHandler
-from .version import __version__
+try:
+    from .node import NamespaceHandler
+    from .version import __version__
+except ModuleNotFoundError:
+    from node import NamespaceHandler
+    from version import __version__
 import subprocess
 from subprocess import PIPE
 
@@ -425,9 +429,16 @@ def prepare_buildenv(dockercli):
         log.info("Build container not found. Building it now...")
         try:
             import importlib.resources as resources
-            with resources.open_binary('rnvs_tb', 'Dockerfile_buildenv') as dockerfile:
-                dockercli.images.build(fileobj=dockerfile, tag=f"rnvs-buildenv:{RNVS_BUILDENV_VERSION}")
-        except ImportError:
+            try:
+                with resources.open_binary('rnvs_tb', 'Dockerfile_buildenv') as dockerfile:
+                    dockercli.images.build(fileobj=dockerfile, tag=f"rnvs-buildenv:{RNVS_BUILDENV_VERSION}")
+            except ImportError as err:
+                curr = os.path.dirname(os.path.abspath(__file__))
+                df = os.path.join(curr, "Dockerfile_buildenv")
+                with open(df, "rb") as dockerfile:
+                    dockercli.images.build(fileobj=dockerfile, tag=f"rnvs-buildenv:{RNVS_BUILDENV_VERSION}")
+        except ImportError as err:
+            print(f"====Error: {err}")
             import pkg_resources
             dockerfile = pkg_resources.resource_stream('rnvs_tb', 'Dockerfile_buildenv')
             try:

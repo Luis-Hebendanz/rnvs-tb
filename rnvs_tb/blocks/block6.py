@@ -4,10 +4,19 @@ import ipaddress
 import time
 import logging
 
-from ..common import exec_async, which, ExecAsyncHandler, TKNTestCase, run_tests
-from ..node import DockerThread
-from ..packet import DataPacket, ControlPacket, NullPacket, Packet
-from ..mock import MockServer, MockClient, GeneralPktHandler, ControlPktHandler
+try:
+    from ..common import exec_async, which, ExecAsyncHandler, TKNTestCase, run_tests
+    from ..node import DockerThread
+    from ..packet import DataPacket, ControlPacket, NullPacket, Packet
+    from ..mock import MockServer, MockClient, GeneralPktHandler, ControlPktHandler
+
+except ModuleNotFoundError:
+    import site
+    site.addsitedir("../")
+    from common import exec_async, which, ExecAsyncHandler, TKNTestCase, run_tests
+    from node import DockerThread
+    from packet import DataPacket, ControlPacket, NullPacket, Packet
+    from mock import MockServer, MockClient, GeneralPktHandler, ControlPktHandler
 
 import subprocess
 
