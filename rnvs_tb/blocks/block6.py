@@ -447,6 +447,8 @@ def main():
         container_network = dockercli.networks.create('testnet',
                                                       internal=True)
 
+        print(f"Docker networks: {dockercli.networks.list()}")
+
         dockercli.volumes.create('src_vol')
         volumes = {'src_vol': {'bind': '/mnt/src', 'mode': 'rw'}}
         container_peer = dockercli.containers.run('ubuntu:bionic',
