@@ -10,7 +10,7 @@ import logging
 try:
     from .node import DockerThread
     from .packet import Packet, ControlPacket, DataPacket, NTPPacket
-except ModuleNotFoundError:
+except (ImportError, ModuleNotFoundError):
     from node import DockerThread
     from packet import Packet, ControlPacket, DataPacket, NTPPacket
 class MockServer(socketserver.ThreadingMixIn, socketserver.TCPServer):

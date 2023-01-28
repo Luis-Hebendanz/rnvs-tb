@@ -10,7 +10,7 @@ try:
     from ..packet import DataPacket, ControlPacket, NullPacket, Packet
     from ..mock import MockServer, MockClient, GeneralPktHandler, ControlPktHandler
 
-except ModuleNotFoundError:
+except (ImportError, ModuleNotFoundError):
     import site
     site.addsitedir("../")
     from common import exec_async, which, ExecAsyncHandler, TKNTestCase, run_tests

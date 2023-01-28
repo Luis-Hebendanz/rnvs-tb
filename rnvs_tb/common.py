@@ -21,7 +21,7 @@ from docker.errors import ImageNotFound
 try:
     from .node import NamespaceHandler
     from .version import __version__
-except ModuleNotFoundError:
+except (ImportError, ModuleNotFoundError):
     from node import NamespaceHandler
     from version import __version__
 import subprocess
